@@ -7,9 +7,10 @@ public class MC_base: MonoBehaviour
     public float runningSpeed;
     private Rigidbody rb;
     public bool isGrabbing = false;
-    private GameObject grabObj;
+    public  GameObject grabObj;
     [SerializeField] public MC_InGameInformation inf;
     [SerializeField] private Transform grabTransform;
+    private GameObject tableObj;
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
@@ -47,8 +48,13 @@ public class MC_base: MonoBehaviour
     }
     private void Grab()
     {
-        if (Input.GetKeyDown(KeyCode.E) && grabObj != null && inf.controlMode == 0 )
+        if (Input.GetKeyUp(KeyCode.E) &&  inf.controlMode == 0 && (grabObj != null || (tableObj != null && tableObj.GetComponent<Table>().grabables.Count > 0)))
         {
+            
+            if (tableObj.GetComponent<Table>().grabables.Count > 0)
+            {
+                grabObj = tableObj.GetComponent<Table>().grabables[0];
+            }
             if (isGrabbing)
             {
                 grabObj.transform.parent = null;
@@ -65,7 +71,7 @@ public class MC_base: MonoBehaviour
             }
         }
     }
-    private void OnCollisionStay(Collision coll)
+    private void OnCollisionEnter(Collision coll)
     {
         if (!isGrabbing)
         {
@@ -74,10 +80,23 @@ public class MC_base: MonoBehaviour
                 grabObj = coll.collider.gameObject;
                
             }
-            if (coll.collider.CompareTag("Table") && coll.collider.gameObject.GetComponent<Table>().grabables.Count > 0)
-            {               
-                grabObj = coll.collider.gameObject.GetComponent<Table>().grabables[0];
+        }
+    }
+    private void OnTriggerEnter(Collider coll)
+    {
+        if (!isGrabbing)
+        {
+            if (coll.CompareTag("Table"))
+            {
+                tableObj = coll.gameObject;
             }
+        }
+    }
+    private void OnTriggerExit(Collider coll)
+    {
+        if (coll.CompareTag("Table"))
+        {
+            tableObj = null;
         }
     }
     private void OnCollisionExit(Collision coll)

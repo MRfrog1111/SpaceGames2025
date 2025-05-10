@@ -55,7 +55,7 @@ public class CameraRotating: MonoBehaviour
                 {
                     if (coll.gameObject.name == tableNames[i])
                     {
-                        gameObject.name = tableNames[i];
+                        //gameObject.name = tableNames[i];
                         ChangeCameraTransform(i+1, 0);
                         inf.controlMode = 1;
                         curentTableIndex = i+1;

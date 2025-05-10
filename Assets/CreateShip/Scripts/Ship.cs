@@ -40,6 +40,8 @@ public class Ship : MonoBehaviour
     {
         messegeUI.SetActive(true);
         inf.shipsCreated++;
+        inf.gameObject.GetComponent<MC_base>().isGrabbing = false;
+        inf.gameObject.GetComponent<MC_base>().grabObj = null;
         Destroy(gameObject);
     }
     IEnumerator waitForAdding()
